@@ -1,0 +1,41 @@
+version: '3.5'
+
+services:
+  otelcol:
+    container_name: o11y-otelcol
+    image: otel/opentelemetry-collector-contrib:0.60.0
+    volumes:
+      - ./otel-config.yml:/etc/otelcol-contrib/config.yaml
+    ports:
+      - "6832:6832/udp" # jaeger
+      - "8125:8125/udp" # statsd
+      - "9572:9502"
+    networks:
+      - bubble
+
+  prometheus:
+    container_name: o11y-prometheus
+    image: prom/prometheus:v2.38.0
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+
+  grafana:
+    container_name: o11y-grafana
+    image: grafana/grafana-oss:8.2.4
+    ports:
+      - "3000:3000"
+
+  jaeger:
+    container_name: o11y-jaeger
+    image: jaegertracing/all-in-one:1.37.0
+    ports:
+      - "14268:14268" # accept jaeger.thrift
+      - "16686:16686" # jaeger ui
+    networks:
+      - bubble
+
+networks:
+  bubble:
+    external: true

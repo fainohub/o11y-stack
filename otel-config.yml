@@ -19,7 +19,7 @@ exporters:
   jaeger_thrift:
     endpoint: "http://jaeger:14268/api/traces"
   otlp:
-    endpoint: http://traces.opentelemetry.svc.cluster.local:4317
+    endpoint:
     tls:
       insecure: true
 
